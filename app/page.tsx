@@ -1,10 +1,22 @@
+import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 
 import { ContactForm } from '@/components/contact-form';
 import { FaqAccordion } from '@/components/faq-accordion';
+import { JsonLdScript } from '@/components/json-ld';
 import { CtaButton, Section, SectionHeading } from '@/components/ui';
+import { faqJsonLd } from '@/lib/seo';
 import { faqs, services, site } from '@/lib/site';
+
+export const metadata: Metadata = {
+  title: {
+    absolute: 'Maquila de nómina, REPSE y gestión de capital humano | People and Point',
+  },
+  description:
+    'Maquila de nómina, servicios especializados REPSE, monedero digital, contabilidad, IMSS, punto de venta y capacitación empresarial. 15+ años optimizando procesos de capital humano en CDMX, Guadalajara y Monterrey.',
+  alternates: { canonical: '/' },
+};
 
 const highlights = [
   {
@@ -27,6 +39,7 @@ const highlights = [
 export default function HomePage() {
   return (
     <>
+      <JsonLdScript data={[faqJsonLd()]} />
       <section className="relative isolate flex min-h-[86vh] items-center overflow-hidden bg-navy pt-40 pb-24">
         <Image src="/images/hero.jpg" alt="" fill priority sizes="100vw" className="-z-10 object-cover opacity-30" />
         <div className="-z-10 absolute inset-0 bg-linear-to-b from-navy via-navy/85 to-navy/95" />
@@ -70,7 +83,7 @@ export default function HomePage() {
         </div>
       </Section>
 
-      <Section className="bg-cream">
+      <Section id="servicios" className="bg-cream">
         <SectionHeading
           title="Soluciones integrales que impulsan el crecimiento real de tu empresa"
           intro="En People and Point convertimos la gestión operativa en una ventaja competitiva. Diseñamos soluciones estratégicas que combinan tecnología, precisión y acompañamiento humano para garantizar eficiencia, cumplimiento y resultados medibles. Sea cual sea el tamaño de tu organización, nuestros servicios se adaptan a tus necesidades, ayudándote a optimizar recursos, reducir costos y potenciar a tu equipo."

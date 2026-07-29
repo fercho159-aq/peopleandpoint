@@ -1,14 +1,17 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 
+import { JsonLdScript } from '@/components/json-ld';
 import { CtaButton, PageHero, Section, SectionHeading } from '@/components/ui';
+import { breadcrumbJsonLd, buildMetadata } from '@/lib/seo';
 import { pillars, team, values } from '@/lib/site';
 
-export const metadata: Metadata = {
-  title: 'Nosotros',
+export const metadata: Metadata = buildMetadata({
+  title: 'Nosotros: aliado estratégico en gestión de capital humano',
   description:
-    'Más que un proveedor, somos un aliado estratégico que transforma la administración del capital humano en un motor de rentabilidad y crecimiento sostenible.',
-};
+    'Más que un proveedor, somos un aliado estratégico que transforma la administración del capital humano en un motor de rentabilidad y crecimiento sostenible. Conoce nuestra misión, visión y valores.',
+  path: '/about',
+});
 
 const purpose = [
   {
@@ -24,6 +27,14 @@ const purpose = [
 export default function AboutPage() {
   return (
     <>
+      <JsonLdScript
+        data={[
+          breadcrumbJsonLd([
+            { name: 'Inicio', path: '/' },
+            { name: 'Nosotros', path: '/about' },
+          ]),
+        ]}
+      />
       <PageHero
         eyebrow="Nosotros"
         title="¿Qué nos hace diferentes?"

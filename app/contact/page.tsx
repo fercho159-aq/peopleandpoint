@@ -1,18 +1,29 @@
 import type { Metadata } from 'next';
 
 import { ContactForm } from '@/components/contact-form';
+import { JsonLdScript } from '@/components/json-ld';
 import { PageHero, Section } from '@/components/ui';
+import { breadcrumbJsonLd, buildMetadata } from '@/lib/seo';
 import { offices, site } from '@/lib/site';
 
-export const metadata: Metadata = {
-  title: 'Contacto',
+export const metadata: Metadata = buildMetadata({
+  title: 'Contacto: agenda una asesoría en nómina y capital humano',
   description:
-    'Cuéntanos tus desafíos de nómina, contabilidad, seguridad social o capacitación. En People and Point te acompañamos.',
-};
+    'Cuéntanos tus desafíos de nómina, contabilidad, seguridad social o capacitación. Oficinas en Ciudad de México, Guadalajara y Monterrey. Escríbenos a contacto@peopleandpoint.com.',
+  path: '/contact',
+});
 
 export default function ContactPage() {
   return (
     <>
+      <JsonLdScript
+        data={[
+          breadcrumbJsonLd([
+            { name: 'Inicio', path: '/' },
+            { name: 'Contacto', path: '/contact' },
+          ]),
+        ]}
+      />
       <PageHero
         eyebrow="Contacto"
         title="Conectemos con propósito"

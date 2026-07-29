@@ -4,7 +4,9 @@ import { Montserrat, Outfit } from 'next/font/google';
 
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
+import { JsonLdScript } from '@/components/json-ld';
 import { WhatsAppButton } from '@/components/whatsapp-button';
+import { organizationJsonLd, websiteJsonLd } from '@/lib/seo';
 import { site } from '@/lib/site';
 
 import './globals.css';
@@ -24,16 +26,40 @@ const outfit = Outfit({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} | Asesoría en RRHH`,
-    template: `%s - ${site.name}`,
+    default: `${site.name} | Maquila de nómina, REPSE y capital humano en México`,
+    template: `%s | ${site.name}`,
   },
   description: site.description,
+  applicationName: site.name,
+  authors: [{ name: site.name, url: site.url }],
+  creator: site.name,
+  publisher: site.name,
+  category: 'business',
+  alternates: { canonical: '/' },
+  formatDetection: { email: false, telephone: false, address: false },
   openGraph: {
     type: 'website',
     locale: 'es_MX',
     siteName: site.name,
-    title: `${site.name} | Asesoría en RRHH`,
+    title: `${site.name} | Maquila de nómina, REPSE y capital humano en México`,
     description: site.description,
+    url: site.url,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${site.name} | Maquila de nómina, REPSE y capital humano`,
+    description: site.description,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
   },
 };
 
@@ -51,6 +77,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <main id="contenido">{children}</main>
         <Footer />
         <WhatsAppButton />
+        <JsonLdScript data={[organizationJsonLd(), websiteJsonLd()]} />
       </body>
     </html>
   );

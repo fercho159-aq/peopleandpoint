@@ -1,11 +1,16 @@
 import type { Metadata } from 'next';
 
 import { PageHero, Section } from '@/components/ui';
+import { buildMetadata } from '@/lib/seo';
 import { site } from '@/lib/site';
 
 export const metadata: Metadata = {
-  title: 'Política de privacidad',
-  description: `Aviso de privacidad de ${site.name}.`,
+  ...buildMetadata({
+    title: 'Política de privacidad',
+    description: `Aviso de privacidad de ${site.name}: cómo tratamos los datos personales que recibimos a través de este sitio.`,
+    path: '/privacy-policy',
+  }),
+  robots: { index: false, follow: true },
 };
 
 export default function PrivacyPolicyPage() {

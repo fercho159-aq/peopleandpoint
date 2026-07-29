@@ -1,11 +1,16 @@
 import type { Metadata } from 'next';
 
 import { PageHero, Section } from '@/components/ui';
+import { buildMetadata } from '@/lib/seo';
 import { site } from '@/lib/site';
 
 export const metadata: Metadata = {
-  title: 'Términos y Condiciones del servicio',
-  description: `Términos y condiciones del servicio de ${site.name}.`,
+  ...buildMetadata({
+    title: 'Términos y Condiciones del servicio',
+    description: `Términos y condiciones que rigen el uso de este sitio y la contratación de los servicios de ${site.name}.`,
+    path: '/terminos-y-condiciones-del-servicio',
+  }),
+  robots: { index: false, follow: true },
 };
 
 export default function TermsPage() {

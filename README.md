@@ -41,6 +41,24 @@ npm run build      # build de producción
 npm run typecheck  # tsc --noEmit
 ```
 
+## SEO
+
+- **Metadata por página** (`lib/seo.ts` → `buildMetadata`): título, descripción, canonical, Open Graph y Twitter Card.
+- **Canonical absoluto** en todas las rutas, derivado de `metadataBase`.
+- **Datos estructurados** JSON-LD, inyectados con `components/json-ld.tsx`:
+  - `ProfessionalService` + `WebSite` en el layout (direcciones de las 3 oficinas, contacto, catálogo de servicios).
+  - `FAQPage` en la home — habilita el rich result de preguntas frecuentes.
+  - `Service` + `BreadcrumbList` en cada página de servicio.
+  - `BreadcrumbList` en Nosotros y Contacto.
+- **Open Graph image** generada en runtime con `next/og` (`app/opengraph-image.tsx`, 1200×630 PNG).
+- **`robots.txt`** con `Disallow: /api/`, host y sitemap declarados.
+- **`sitemap.xml`** con `lastmod`, `changefreq` y prioridades (servicios 0.9, home 1.0, legales 0.2).
+- **`noindex`** en aviso de privacidad, términos y 404 — páginas sin valor de búsqueda que diluyen el crawl budget.
+- `max-image-preview:large` y `max-snippet:-1` para Googlebot.
+
+Para verificar tras el deploy: [Rich Results Test](https://search.google.com/test/rich-results) y Search Console
+(dar de alta la propiedad y enviar `https://peopleandpoint.com/sitemap.xml`).
+
 ## Formulario de contacto
 
 `POST /api/contact` valida en servidor y envía el correo con [Resend](https://resend.com). Variables de entorno:

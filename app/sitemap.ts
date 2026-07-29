@@ -2,13 +2,32 @@ import type { MetadataRoute } from 'next';
 
 import { services, site } from '@/lib/site';
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const routes = ['', '/about', '/contact', '/privacy-policy', '/terminos-y-condiciones-del-servicio'];
-  const serviceRoutes = services.map((service) => `/${service.slug}`);
+type Entry = {
+  readonly path: string;
+  readonly priority: number;
+  readonly changeFrequency: 'weekly' | 'monthly' | 'yearly';
+};
 
-  return [...routes, ...serviceRoutes].map((route) => ({
-    url: `${site.url}${route}`,
-    changeFrequency: 'monthly',
-    priority: route === '' ? 1 : 0.7,
+export default function sitemap(): MetadataRoute.Sitemap {
+  const lastModified = new Date();
+
+  const entries: readonly Entry[] = [
+    { path: '', priority: 1, changeFrequency: 'weekly' },
+    ...services.map((service) => ({
+      path: `/${service.slug}`,
+      priority: 0.9,
+      changeFrequency: 'monthly' as const,
+    })),
+    { path: '/about', priority: 0.8, changeFrequency: 'monthly' },
+    { path: '/contact', priority: 0.8, changeFrequency: 'monthly' },
+    { path: '/privacy-policy', priority: 0.2, changeFrequency: 'yearly' },
+    { path: '/terminos-y-condiciones-del-servicio', priority: 0.2, changeFrequency: 'yearly' },
+  ];
+
+  return entries.map((entry) => ({
+    url: `${site.url}${entry.path}`,
+    lastModified,
+    changeFrequency: entry.changeFrequency,
+    priority: entry.priority,
   }));
 }

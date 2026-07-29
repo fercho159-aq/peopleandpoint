@@ -4,7 +4,9 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { ContactForm } from '@/components/contact-form';
+import { JsonLdScript } from '@/components/json-ld';
 import { PageHero, Section } from '@/components/ui';
+import { breadcrumbJsonLd, buildMetadata, serviceJsonLd } from '@/lib/seo';
 import { findService, services } from '@/lib/site';
 
 type PageProps = {
@@ -21,10 +23,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const service = findService(slug);
   if (service === undefined) return {};
-  return {
-    title: service.title,
-    description: service.summary,
-  };
+  return buildMetadata({
+    title: `${service.title} para empresas en México`,
+    description: service.summary.length > 158 ? `${service.summary.slice(0, 155)}…` : service.summary,
+    path: `/${service.slug}`,
+    image: service.image,
+  });
 }
 
 export default async function ServicePage({ params }: PageProps) {
@@ -36,6 +40,16 @@ export default async function ServicePage({ params }: PageProps) {
 
   return (
     <>
+      <JsonLdScript
+        data={[
+          serviceJsonLd(service),
+          breadcrumbJsonLd([
+            { name: 'Inicio', path: '/' },
+            { name: 'Servicios', path: '/#servicios' },
+            { name: service.title, path: `/${service.slug}` },
+          ]),
+        ]}
+      />
       <PageHero eyebrow="Nuestros servicios" title={service.title} intro={service.summary} image={service.image} />
 
       <Section>

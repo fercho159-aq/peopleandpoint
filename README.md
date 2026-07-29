@@ -50,7 +50,12 @@ npm run typecheck  # tsc --noEmit
   - `FAQPage` en la home — habilita el rich result de preguntas frecuentes.
   - `Service` + `BreadcrumbList` en cada página de servicio.
   - `BreadcrumbList` en Nosotros y Contacto.
-- **Open Graph image** generada en runtime con `next/og` (`app/opengraph-image.tsx`, 1200×630 PNG).
+- **Imagen al compartir** (Open Graph + Twitter Card), 1200×630 PNG generada con `next/og` desde
+  `components/og-card.tsx`: logo, título de la página, subtítulo y las tres ciudades sobre el degradado navy.
+  Hay tarjeta propia para home, Nosotros, Contacto y cada uno de los 7 servicios (el subtítulo usa su diferenciador).
+- **Favicon** derivado del isotipo original: `app/favicon.ico` (16/32/48), `app/icon.png` (512) y
+  `app/apple-icon.png` (180, aplanado sobre navy porque iOS ignora la transparencia).
+- **`manifest.webmanifest`** con nombre, colores de marca e íconos; `theme-color` `#184268` vía `export const viewport`.
 - **`robots.txt`** con `Disallow: /api/`, host y sitemap declarados.
 - **`sitemap.xml`** con `lastmod`, `changefreq` y prioridades (servicios 0.9, home 1.0, legales 0.2).
 - **`noindex`** en aviso de privacidad, términos y 404 — páginas sin valor de búsqueda que diluyen el crawl budget.

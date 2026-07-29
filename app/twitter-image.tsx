@@ -6,6 +6,6 @@ export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 export const runtime = 'nodejs';
 
-export default async function OpengraphImage() {
+export default async function TwitterImage() {
   return renderOgCard(defaultOgCard);
 }

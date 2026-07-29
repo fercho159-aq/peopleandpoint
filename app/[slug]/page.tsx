@@ -27,7 +27,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: `${service.title} para empresas en México`,
     description: service.summary.length > 158 ? `${service.summary.slice(0, 155)}…` : service.summary,
     path: `/${service.slug}`,
-    image: service.image,
   });
 }
 

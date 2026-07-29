@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import { Montserrat } from 'next/font/google';
-import localFont from 'next/font/local';
+import { Montserrat, Outfit } from 'next/font/google';
 
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
@@ -16,14 +15,10 @@ const montserrat = Montserrat({
   variable: '--font-montserrat',
 });
 
-const madani = localFont({
-  src: [
-    { path: '../public/fonts/Madani-Regular.ttf', weight: '400', style: 'normal' },
-    { path: '../public/fonts/Madani-Bold.ttf', weight: '700', style: 'normal' },
-    { path: '../public/fonts/Madani-Black.ttf', weight: '900', style: 'normal' },
-  ],
+const outfit = Outfit({
+  subsets: ['latin'],
   display: 'swap',
-  variable: '--font-madani',
+  variable: '--font-outfit',
 });
 
 export const metadata: Metadata = {
@@ -44,7 +39,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="es-MX" className={`${montserrat.variable} ${madani.variable}`}>
+    <html lang="es-MX" className={`${montserrat.variable} ${outfit.variable}`}>
       <body>
         <a
           href="#contenido"

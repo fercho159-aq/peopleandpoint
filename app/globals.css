@@ -11,7 +11,7 @@
   --color-ink-dark: #23282d;
 
   --font-sans: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-madani), var(--font-montserrat), ui-sans-serif, sans-serif;
+  --font-display: var(--font-outfit), var(--font-montserrat), ui-sans-serif, sans-serif;
 
   --shadow-card: 0 24px 60px -30px rgb(24 66 104 / 0.35);
   --shadow-float: 0 30px 70px -35px rgb(24 66 104 / 0.55);

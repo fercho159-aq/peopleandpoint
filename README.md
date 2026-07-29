@@ -76,6 +76,9 @@ Estos puntos vienen del sitio original y conviene revisarlos con el cliente:
 
 ## Fuentes
 
-`public/fonts/Madani-*.ttf` proviene del sitio original y es la versión **DEMO** de Madani Arabic (no licenciada para
-uso comercial). Antes de publicar conviene comprar la licencia o cambiar a una alternativa (por ejemplo Poppins o
-Outfit vía `next/font/google`) editando `app/layout.tsx` y `--font-display` en `app/globals.css`.
+- **Outfit** (títulos) y **Montserrat** (texto), ambas vía `next/font/google`.
+
+El sitio original usa *Madani Arabic*, pero el archivo publicado ahí es la versión **DEMO**: sus dígitos son una marca
+de agua («PERSONAL USE ONLY / namelatype.com»), visible por ejemplo en «15+ años». Por eso se descartó y se sustituyó
+por Outfit, geométrica y de proporciones similares. Si se compra la licencia de Madani, basta con volver a
+`next/font/local` en `app/layout.tsx` y apuntar `--font-display` en `app/globals.css`.

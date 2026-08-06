@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 import { Montserrat, Outfit } from 'next/font/google';
 
+import { Analytics } from '@/components/analytics';
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
 import { JsonLdScript } from '@/components/json-ld';
@@ -84,6 +85,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <Footer />
         <WhatsAppButton />
         <JsonLdScript data={[organizationJsonLd(), websiteJsonLd()]} />
+        <Analytics />
       </body>
     </html>
   );

@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from 'react';
 
+import { trackLead } from '@/lib/analytics';
 import type { ContactResponse } from '@/lib/contact';
 import { services, site } from '@/lib/site';
 
@@ -32,6 +33,7 @@ export function ContactForm({ variant = 'card' }: { variant?: 'card' | 'plain' }
       service: String(data.get('service') ?? ''),
       message: String(data.get('message') ?? ''),
       consent: data.get('consent') === 'on',
+      hp: String(data.get('website') ?? ''),
     };
 
     try {
@@ -44,6 +46,7 @@ export function ContactForm({ variant = 'card' }: { variant?: 'card' | 'plain' }
 
       if (result.ok) {
         form.reset();
+        trackLead('Formulario de contacto');
         setStatus({ kind: 'sent' });
       } else {
         setStatus({ kind: 'error', message: result.message });
@@ -67,6 +70,12 @@ export function ContactForm({ variant = 'card' }: { variant?: 'card' | 'plain' }
       </h2>
 
       <form className="mt-7 space-y-4" onSubmit={handleSubmit} noValidate>
+        {/* Trampa para bots: fuera de pantalla y fuera del orden de tabulación. Nadie la ve, los bots la llenan. */}
+        <div aria-hidden="true" className="absolute left-[-9999px] h-0 w-0 overflow-hidden">
+          <label htmlFor="website">No llenar este campo</label>
+          <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+        </div>
+
         <div>
           <label className="sr-only" htmlFor="name">
             Nombre

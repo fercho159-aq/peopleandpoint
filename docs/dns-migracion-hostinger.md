@@ -4,6 +4,8 @@ Fuente: cPanel Zone Editor de HostGator (94 registros), exportado 2026-07-31.
 IP servidor viejo: `69.6.201.236` · Servidor cPanel: `sh00012.hostgator.mx`
 Correo: **Google Workspace** (no tocar, solo replicar registros).
 
+> **Este doc es el inventario.** Para ejecutar, usa [`dns-orden-de-corte.md`](./dns-orden-de-corte.md) — tiene el orden por fases y el estado verificado al 2026-08-06 (raíz y `www` ya en Vercel; faltan los 3 subdominios y el cambio de nameservers).
+
 ---
 
 ## 1. Registros a RECREAR en Hostinger (críticos)
@@ -64,15 +66,15 @@ Decidir: ¿IP de Hostinger, o CNAME a Vercel/Netlify si el sitio Next.js se desp
 > | `reclutamiento.peopleandpoint.com` | `peopleandpoint-reclutamiento` | `peopleandpoint-reclutamiento-khaki.vercel.app` |
 > | `diagnosticonomina.peopleandpoint.com` | `peopleandpoint-diagnostico` | `peopleandpoint-diagnostico-phi.vercel.app` |
 >
-> **Corte de DNS pendiente.** Los 3 subdominios siguen sirviendo el WordPress de HostGator hasta que cambies el registro A:
+> **Corte de DNS pendiente.** Los 3 subdominios siguen sirviendo el WordPress de HostGator. Se resuelven al cargar la zona nueva en Hostinger:
 >
 > ```
-> servicios          A   76.76.21.21     (hoy: 69.6.201.236)
-> reclutamiento      A   76.76.21.21     (hoy: 69.6.201.236)
-> diagnosticonomina  A   76.76.21.21     (hoy: 69.6.201.236)
+> servicios          CNAME   cname.vercel-dns.com     (hoy: A 69.6.201.236)
+> reclutamiento      CNAME   cname.vercel-dns.com     (hoy: A 69.6.201.236)
+> diagnosticonomina  CNAME   cname.vercel-dns.com     (hoy: A 69.6.201.236)
 > ```
 >
-> Elimina también los `www.servicios`, `www.reclutamiento` y `www.diagnosticonomina` (o agrégalos como dominios adicionales en cada proyecto de Vercel si los quieres conservar). Vercel emite el certificado SSL solo, en cuanto detecta el registro apuntando a su IP.
+> Los `www.servicios`, `www.reclutamiento` y `www.diagnosticonomina` no se recrean (o agrégalos como dominios adicionales en cada proyecto de Vercel si los quieres conservar). Vercel emite el certificado SSL solo, en cuanto detecta el registro apuntando hacia él.
 
 ---
 
@@ -120,21 +122,11 @@ No copiar ninguno de estos — mueren con el servidor viejo:
 
 ## 4. Plan de migración
 
-**Advertencia:** transferir el registrador y cambiar los nameservers son operaciones distintas. Se recomienda cambiar **solo nameservers** primero (riesgo bajo, reversible). La transferencia de registrador tiene bloqueo de 60 días y requiere código EPP; hacerla en un paso posterior.
-
-1. **Bajar TTL primero.** En cPanel actual, cambiar TTL de MX y TXT raíz de `14400` → `300`. Esperar **4 horas** (el TTL viejo es 14400s = 4h) antes de seguir.
-2. **Construir la zona completa en Hostinger** con los registros de las secciones 1 y 2. NO cambiar nameservers todavía.
-3. **Verificar la zona nueva** consultando directo a los NS de Hostinger:
-   ```bash
-   dig @ns1.dns-parking.com peopleandpoint.com MX +short
-   dig @ns1.dns-parking.com peopleandpoint.com TXT +short
-   dig @ns1.dns-parking.com www.peopleandpoint.com +short
-   ```
-   (confirmar los nombres reales de los NS en el panel de Hostinger)
-4. **Cambiar nameservers** en el registrador actual → los de Hostinger.
-5. **Propagación**: 1–24h. El correo no se interrumpe si los MX son idénticos.
-6. **Post-migración**: verificar en Google Workspace que el dominio siga validado; correr `dig` para MX/SPF/DKIM/DMARC; subir TTL de vuelta a 3600.
-7. **No cancelar HostGator** hasta confirmar 72h de correo y sitio estables.
+> **Movido.** El plan de ejecución vive ahora en [`dns-orden-de-corte.md`](./dns-orden-de-corte.md), con estado verificado al 2026-08-06 y **todo el trabajo dentro de Hostinger** (el cPanel de HostGator ya no se toca).
+>
+> Resumen: registrador ya migrado ✅ · DNSSEC apagado ✅ · raíz y `www` ya en Vercel ✅ · falta cambiar NS y cargar la zona en Hostinger. La delegación NS tiene TTL de 48h, así que los 3 subdominios sirven el WordPress viejo a parte del tráfico durante ese lapso. El correo no se interrumpe: los MX viejos y nuevos son idénticos.
+>
+> **No cancelar HostGator** hasta 72h de correo y sitio estables — la zona vieja sigue atendiendo tráfico mientras propaga y es el rollback.
 
 ---
 

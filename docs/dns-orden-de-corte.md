@@ -1,5 +1,9 @@
 # Orden de corte DNS — peopleandpoint.com
 
+> **EJECUTADO el 2026-08-06.** Los nameservers ya están en Hostinger (`artemis` / `hermes.dns-parking.com`) y la zona quedó verificada contra los NS nuevos: A raíz a Vercel, los 5 MX de Google sin ninguno de Hostinger, SPF y verificación de dominio, y los 3 subdominios en CNAME a Vercel con SSL válido. La delegación en el TLD tiene TTL de 48h, así que hasta entonces parte del tráfico sigue viendo el WordPress viejo en las landings.
+>
+> Pendiente de la sección 5: **DKIM y DMARC**. Este documento se conserva como registro de lo ejecutado.
+
 Runbook de ejecución. **Todo se hace en Hostinger.** No se toca el cPanel de HostGator en ningún paso.
 
 Complemento de [`dns-migracion-hostinger.md`](./dns-migracion-hostinger.md) — ese tiene el inventario completo de los 94 registros de la zona vieja; este tiene qué cargar y en qué orden.

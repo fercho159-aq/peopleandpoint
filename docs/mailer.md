@@ -65,7 +65,7 @@ Header `X-Admin-Key`. Historial y conteos.
 ## Protecciones
 
 - **Rate limit** por API key: 20/min, 200/hora.
-- **Honeypot**: si el cuerpo trae `hp` o `website` con contenido, se guarda como `spam` y **se responde `200`** para no darle señal al bot. Los formularios aún no mandan el campo — falta agregarlo al HTML para que sirva.
+- **Honeypot**: si el cuerpo trae `hp` o `website` con contenido, se guarda como `spam` y **se responde `200`** para no darle señal al bot. Los 4 formularios ya mandan el campo; `readHoneypot()` en `lib/contact.ts` lo rescata del cuerpo crudo, porque `parseContactPayload` solo devuelve campos validados y lo descartaba.
 - Validación de longitudes y formato, espejo de la del sitio.
 - El servicio escucha solo en `127.0.0.1`; el único acceso es vía nginx.
 
@@ -109,5 +109,5 @@ sudo -u postgres psql -d maw_mailer -c \
 
 - [ ] **DKIM para `mawsoluciones.com`** — hoy no existe. SPF ✅ y DMARC `p=none`, así que entrega, pero sin DKIM la reputación es peor y sube el riesgo de spam. Se genera en el panel de correo de Hostinger y el TXT va en la zona DNS (también Hostinger).
 - [ ] **Rotar la contraseña de `sistema@mawsoluciones.com`** — se compartió en texto plano durante el montaje. Al rotarla, actualizar `SMTP_PASS` en `/opt/maw-mailer/.env` y `pm2 restart maw-mailer`.
-- [ ] **Campo honeypot en los formularios** — el relay ya lo soporta, falta el input oculto en el HTML de los 4 sitios.
+- [x] ~~Campo honeypot en los formularios~~ — hecho y verificado en producción: envíos con la trampa llena quedan en `spam` y no generan correo.
 - [ ] **Postgres del VPS escucha en `0.0.0.0:5432`** — expuesto a internet. Ajeno a este servicio, pero conviene cerrarlo a `127.0.0.1`.

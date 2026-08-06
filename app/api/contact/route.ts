@@ -5,38 +5,31 @@ import { site } from '@/lib/site';
 
 export const runtime = 'nodejs';
 
-function renderEmail(payload: ContactPayload): string {
-  const rows: ReadonlyArray<readonly [string, string]> = [
-    ['Nombre', payload.name],
-    ['Email', payload.email],
-    ['Teléfono', payload.phone || '—'],
-    ['Empresa', payload.company || '—'],
-    ['Servicio', payload.service || '—'],
-    ['Mensaje', payload.message || '—'],
-  ];
-  return rows.map(([label, value]) => `${label}: ${value}`).join('\n');
-}
+const MAILER_URL = process.env.MAILER_URL ?? 'https://envios.mawsoluciones.com';
 
-async function sendWithResend(payload: ContactPayload, apiKey: string): Promise<boolean> {
-  const to = process.env.CONTACT_TO ?? site.email;
-  const from = process.env.CONTACT_FROM ?? 'People and Point <onboarding@resend.dev>';
+/**
+ * Entrega el lead al relay en el VPS, que lo guarda en Postgres antes de
+ * enviarlo por SMTP. Si el correo falla ahí, el relay reintenta solo: para
+ * nosotros basta con que lo haya aceptado.
+ */
+async function sendWithMailer(payload: ContactPayload, apiKey: string): Promise<boolean> {
+  try {
+    const res = await fetch(`${MAILER_URL}/v1/send`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Api-Key': apiKey,
+      },
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(15_000),
+    });
 
-  const res = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      from,
-      to: [to],
-      reply_to: payload.email,
-      subject: `Nueva solicitud de asesoría — ${payload.name}`,
-      text: renderEmail(payload),
-    }),
-  });
-
-  return res.ok;
+    if (!res.ok) return false;
+    const result = (await res.json()) as { ok?: boolean };
+    return result.ok === true;
+  } catch {
+    return false;
+  }
 }
 
 export async function POST(request: Request): Promise<NextResponse<ContactResponse>> {
@@ -58,7 +51,7 @@ export async function POST(request: Request): Promise<NextResponse<ContactRespon
     );
   }
 
-  const apiKey = process.env.RESEND_API_KEY;
+  const apiKey = process.env.MAILER_API_KEY;
   if (apiKey === undefined || apiKey === '') {
     return NextResponse.json(
       {
@@ -70,7 +63,7 @@ export async function POST(request: Request): Promise<NextResponse<ContactRespon
     );
   }
 
-  const sent = await sendWithResend(payload, apiKey);
+  const sent = await sendWithMailer(payload, apiKey);
   if (!sent) {
     return NextResponse.json(
       { ok: false, reason: 'send_failed', message: `No pudimos enviar tu mensaje. Escríbenos a ${site.email}.` },

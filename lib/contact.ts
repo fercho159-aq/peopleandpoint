@@ -43,3 +43,10 @@ export function parseContactPayload(input: unknown): ContactPayload | null {
 
   return { name, email, phone, company, service, message, consent };
 }
+
+/** Lee el campo trampa del cuerpo crudo. No forma parte del payload validado. */
+export function readHoneypot(input: unknown): string {
+  if (typeof input !== 'object' || input === null) return '';
+  const raw = input as Record<string, unknown>;
+  return asString(raw.website) || asString(raw.hp);
+}

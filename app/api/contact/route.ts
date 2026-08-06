@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-import { parseContactPayload, type ContactPayload, type ContactResponse } from '@/lib/contact';
+import { parseContactPayload, readHoneypot, type ContactPayload, type ContactResponse } from '@/lib/contact';
 import { site } from '@/lib/site';
 
 export const runtime = 'nodejs';
@@ -12,7 +12,7 @@ const MAILER_URL = process.env.MAILER_URL ?? 'https://envios.mawsoluciones.com';
  * enviarlo por SMTP. Si el correo falla ahí, el relay reintenta solo: para
  * nosotros basta con que lo haya aceptado.
  */
-async function sendWithMailer(payload: ContactPayload, apiKey: string): Promise<boolean> {
+async function sendWithMailer(payload: ContactPayload, honeypot: string, apiKey: string): Promise<boolean> {
   try {
     const res = await fetch(`${MAILER_URL}/v1/send`, {
       method: 'POST',
@@ -20,7 +20,7 @@ async function sendWithMailer(payload: ContactPayload, apiKey: string): Promise<
         'Content-Type': 'application/json',
         'X-Api-Key': apiKey,
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({ ...payload, hp: honeypot }),
       signal: AbortSignal.timeout(15_000),
     });
 
@@ -63,7 +63,7 @@ export async function POST(request: Request): Promise<NextResponse<ContactRespon
     );
   }
 
-  const sent = await sendWithMailer(payload, apiKey);
+  const sent = await sendWithMailer(payload, readHoneypot(body), apiKey);
   if (!sent) {
     return NextResponse.json(
       { ok: false, reason: 'send_failed', message: `No pudimos enviar tu mensaje. Escríbenos a ${site.email}.` },

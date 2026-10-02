@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import { ContactForm } from '@/components/contact-form';
 import { FaqAccordion } from '@/components/faq-accordion';
+import { HeroVideo } from '@/components/hero-video';
 import { JsonLdScript } from '@/components/json-ld';
 import { CtaButton, Section, SectionHeading } from '@/components/ui';
 import { faqJsonLd } from '@/lib/seo';
@@ -40,18 +41,17 @@ export default function HomePage() {
   return (
     <>
       <JsonLdScript data={[faqJsonLd()]} />
-      <section className="relative isolate flex min-h-[86vh] items-center overflow-hidden bg-navy pt-40 pb-24">
-        <Image src="/images/hero.jpg" alt="" fill priority sizes="100vw" className="-z-10 object-cover opacity-30" />
-        <div className="-z-10 absolute inset-0 bg-linear-to-b from-navy via-navy/85 to-navy/95" />
-        <div className="container-page text-center">
-          <h1 className="mx-auto max-w-4xl text-4xl text-white md:text-[64px]">
+      <section className="bg-navy pt-20 md:pt-[148px]">
+        <HeroVideo />
+        <div className="container-page py-16 text-center md:py-20">
+          <h1 className="mx-auto max-w-4xl text-4xl text-white md:text-[56px]">
             ¿Tu nómina y administración te hacen perder tiempo?
           </h1>
-          <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-white/85">
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/85">
             Cada día que tu empresa invierte en tareas operativas, pierde oportunidades de crecimiento, eficiencia y
             desarrollo de talento.
           </p>
-          <div className="mt-10">
+          <div className="mt-9">
             <CtaButton href="/contact">Obtén asesoría</CtaButton>
           </div>
         </div>

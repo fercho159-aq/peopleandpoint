@@ -35,3 +35,14 @@ export function trackLead(source: string): void {
   window.gtag?.('event', 'generate_lead', { form_source: source });
   window.fbq?.('track', 'Lead', { content_name: source });
 }
+
+/**
+ * Marca que el visitante activó el sonido del video de portada: es la señal
+ * de que lo está viendo de verdad y no solo pasó por encima del loop mudo.
+ */
+export function trackVideoSound(): void {
+  if (typeof window === 'undefined') return;
+
+  window.dataLayer?.push({ event: 'video_sound_on', video_title: 'People and Point 2026' });
+  window.gtag?.('event', 'video_sound_on', { video_title: 'People and Point 2026' });
+}

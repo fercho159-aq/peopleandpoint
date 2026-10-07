@@ -7,8 +7,8 @@ import { trackVideoSound } from '@/lib/analytics';
 const VIDEO_TITLE = 'Video institucional de People and Point';
 
 const SOURCES = {
-  mobile: '/video/people-and-point-720.mp4',
-  desktop: '/video/people-and-point-1080.mp4',
+  mobile: '/video/people-and-point-v2-mobile.mp4',
+  desktop: '/video/people-and-point-v2-desktop.mp4',
 } as const;
 
 /**
@@ -94,7 +94,7 @@ export function HeroVideo() {
       <video
         ref={videoRef}
         className="absolute inset-0 h-full w-full object-cover"
-        poster="/video/people-and-point-poster.jpg"
+        poster="/video/people-and-point-v2-poster.jpg"
         loop
         muted
         playsInline
